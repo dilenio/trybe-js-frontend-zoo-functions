@@ -25,7 +25,9 @@ function animalsOlderThan(animal, age) {
 }
 
 function employeeByName(employeeName) {
-  // seu código aqui
+  const employee = data.employees
+    .filter(emp => emp.firstName === employeeName || emp.lastName === employeeName)[0];
+  return (employee !== undefined ? employee : {});
 }
 
 function createEmployee(personalInfo, associatedWith) {
@@ -33,7 +35,7 @@ function createEmployee(personalInfo, associatedWith) {
 }
 
 function isManager(id) {
-  return employees.flatMap((employee) => employee.managers)
+  return employees.flatMap(employee => employee.managers)
     .some(managerId => managerId === id);
 }
 
