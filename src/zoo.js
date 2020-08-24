@@ -10,7 +10,6 @@ eslint no-unused-vars: [
 */
 
 const data = require('./data');
-//const { employees, animals } = require('./data');
 
 function animalsByIds(...ids) {
   return data.animals
@@ -35,7 +34,7 @@ function createEmployee(personalInfo, associatedWith) {
 }
 
 function isManager(id) {
-  return employees.flatMap(employee => employee.managers)
+  return data.employees.flatMap(employee => employee.managers)
     .some(managerId => managerId === id);
 }
 
