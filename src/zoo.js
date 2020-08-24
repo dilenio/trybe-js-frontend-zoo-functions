@@ -31,7 +31,9 @@ function employeeByName(employeeName) {
 }
 
 function createEmployee(personalInfo, associatedWith) {
-  // seu código aqui
+  const employee = data.employees.push(Object.assign(personalInfo, associatedWith));
+  return data.employees[employee - 1];
+  // data.employees[personalInfo]['associatedWith'] 
 }
 
 function isManager(id) {
