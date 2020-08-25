@@ -10,7 +10,6 @@ eslint no-unused-vars: [
 */
 
 const data = require('./data');
-const { employees } = require('./data');
 
 function animalsByIds(...ids) {
   return data.animals
@@ -124,15 +123,15 @@ function increasePrices(percentage) {
 }
 
 // Inicio do Employee Coverage
-const employeeList = (list) => data.employees
+const employeeList = list => data.employees
   .find((employee) => {
     const { firstName, lastName, id } = employee;
     return (firstName === list || lastName === list || id === list);
   });
 
-const animalList = (animal) => animal.responsibleFor
-  .map((animalId) => data.animals
-    .find((animal) => animal.id === animalId).name);
+const animalList = animal => animal.responsibleFor
+  .map(animalId => data.animals
+    .find(animals => animals.id === animalId).name);
 
 const returnObject = (employee, object) => {
   object[`${employee.firstName} ${employee.lastName}`] = animalList(employee);
