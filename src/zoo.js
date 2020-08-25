@@ -10,6 +10,7 @@ eslint no-unused-vars: [
 */
 
 const data = require('./data');
+const { employees } = require('./data');
 
 function animalsByIds(...ids) {
   return data.animals
@@ -77,7 +78,7 @@ function entryCalculator(entrants) {
 }
 
 function animalMap(options) {
-  // seu código aqui
+
 }
 
 const changeAmPm = hour => (hour > 12 ? `${hour - 12}pm` : `${hour}am`);
@@ -122,8 +123,29 @@ function increasePrices(percentage) {
   });
 }
 
-function employeeCoverage(idOrName) {
+// Inicio do Employee Coverage
+const employeeList = (list) => data.employees
+  .find((employee) => {
+    const { firstName, lastName, id } = employee;
+    return (firstName === list || lastName === list || id === list);
+  });
 
+const animalList = (animal) => animal.responsibleFor
+  .map((animalId) => data.animals
+    .find((animal) => animal.id === animalId).name);
+
+const returnObject = (employee, object) => {
+  object[`${employee.firstName} ${employee.lastName}`] = animalList(employee);
+};
+
+function employeeCoverage(idOrName) {
+  const result = {};
+  if (idOrName) {
+    returnObject(employeeList(idOrName), result);
+  } else {
+    data.employees.forEach(employee => returnObject(employee, result));
+  }
+  return result;
 }
 
 
