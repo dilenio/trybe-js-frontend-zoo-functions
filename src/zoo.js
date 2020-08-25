@@ -80,9 +80,7 @@ function animalMap(options) {
   // seu código aqui
 }
 
-const changeAmPm = (hour) => {
-  return (hour > 12 ? `${hour - 12}pm` : `${hour}am`);
-}
+const changeAmPm = hour => (hour > 12 ? `${hour - 12}pm` : `${hour}am`);
 
 const changeHourMessage = (day, object) => {
   const { open, close } = data.hours[day];
@@ -92,7 +90,7 @@ const changeHourMessage = (day, object) => {
     object[day] = `Open from ${changeAmPm(open)} until ${changeAmPm(close)}`;
   }
   return object;
-}
+};
 
 function schedule(dayName) {
   const result = {};
