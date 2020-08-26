@@ -92,10 +92,10 @@ function retrieveAnimals(locations, sorted, sex) {
   locations.forEach((location) => {
     const animals = data.animals
       .filter(animal => animal.location === location)
-      .map(animal => {
+      .map((animal) => {
         const nameKey = animal.name;
         const nameValues = animal.residents
-          .filter(resident => {
+          .filter((resident) => {
             const isFilteringSex = sex !== undefined;
             return isFilteringSex ? resident.sex === sex : true;
           })
@@ -179,7 +179,8 @@ function animalList(animal) {
 }
 
 function returnObject(employee, object) {
-  return object[`${employee.firstName} ${employee.lastName}`] = animalList(employee);
+  object[`${employee.firstName} ${employee.lastName}`] = animalList(employee);
+  return object;
 }
 
 function employeeCoverage(idOrName) {
