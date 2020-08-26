@@ -111,11 +111,8 @@ function retrieveAnimals(locations, sorted, sex) {
 function animalMap(options) {
   const locations = ['NE', 'NW', 'SE', 'SW'];
   if (!options) return retrieveAnimalsPerLocation(locations);
-
   const { includeNames, sorted, sex } = options;
-
   if (!includeNames) return retrieveAnimalsPerLocation(locations);
-
   return retrieveAnimals(locations, sorted, sex);
 }
 
