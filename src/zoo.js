@@ -76,13 +76,54 @@ function entryCalculator(entrants) {
   return (totalAdult + totalSenior + totalChild);
 }
 
-function animalMap(options) {
-
+function retrieveAnimalsPerLocation(locations) {
+  const animalsPerLocation = {};
+  locations.forEach((location) => {
+    const animals = data.animals
+      .filter(animal => animal.location === location)
+      .map(animal => animal.name);
+    if (animals.length !== 0) animalsPerLocation[location] = animals;
+  });
+  return animalsPerLocation;
 }
 
-const changeAmPm = hour => (hour > 12 ? `${hour - 12}pm` : `${hour}am`);
+function retrieveAnimals(locations, sorted, sex) {
+  const animalsPerLocationWithName = {};
+  locations.forEach((location) => {
+    const animals = data.animals
+      .filter(animal => animal.location === location)
+      .map(animal => {
+        const nameKey = animal.name;
+        const nameValues = animal.residents
+          .filter(resident => {
+            const isFilteringSex = sex !== undefined;
+            return isFilteringSex ? resident.sex === sex : true;
+          })
+          .map(resident => resident.name);
+        if (sorted) nameValues.sort();
+        return { [nameKey]: nameValues };
+      });
+    animalsPerLocationWithName[location] = animals;
+  });
+  return animalsPerLocationWithName;
+}
 
-const changeHourMessage = (day, object) => {
+function animalMap(options) {
+  const locations = ['NE', 'NW', 'SE', 'SW'];
+  if (!options) return retrieveAnimalsPerLocation(locations);
+
+  const { includeNames, sorted, sex } = options;
+
+  if (!includeNames) return retrieveAnimalsPerLocation(locations);
+
+  return retrieveAnimals(locations, sorted, sex);
+}
+
+function changeAmPm(hour) {
+  return (hour > 12 ? `${hour - 12}pm` : `${hour}am`);
+}
+
+function changeHourMessage(day, object) {
   const { open, close } = data.hours[day];
   if (open === 0 && close === 0) {
     object[day] = 'CLOSED';
@@ -90,7 +131,7 @@ const changeHourMessage = (day, object) => {
     object[day] = `Open from ${changeAmPm(open)} until ${changeAmPm(close)}`;
   }
   return object;
-};
+}
 
 function schedule(dayName) {
   const result = {};
@@ -123,19 +164,23 @@ function increasePrices(percentage) {
 }
 
 // Inicio do Employee Coverage
-const employeeList = list => data.employees
-  .find((employee) => {
-    const { firstName, lastName, id } = employee;
-    return (firstName === list || lastName === list || id === list);
-  });
+function employeeList(list) {
+  return data.employees
+    .find((employee) => {
+      const { firstName, lastName, id } = employee;
+      return (firstName === list || lastName === list || id === list);
+    });
+}
 
-const animalList = animal => animal.responsibleFor
-  .map(animalId => data.animals
-    .find(animals => animals.id === animalId).name);
+function animalList(animal) {
+  return animal.responsibleFor
+    .map(animalId => data.animals
+      .find(animals => animals.id === animalId).name);
+}
 
-const returnObject = (employee, object) => {
-  object[`${employee.firstName} ${employee.lastName}`] = animalList(employee);
-};
+function returnObject(employee, object) {
+  return object[`${employee.firstName} ${employee.lastName}`] = animalList(employee);
+}
 
 function employeeCoverage(idOrName) {
   const result = {};
@@ -146,7 +191,6 @@ function employeeCoverage(idOrName) {
   }
   return result;
 }
-
 
 module.exports = {
   entryCalculator,
