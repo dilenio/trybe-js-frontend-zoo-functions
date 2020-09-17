@@ -1,14 +1,3 @@
-/*
-eslint no-unused-vars: [
-  "error",
-  {
-    "args": "none",
-    "vars": "local",
-    "varsIgnorePattern": "data"
-  }
-]
-*/
-
 const data = require('./data');
 
 function animalsByIds(...ids) {
@@ -57,26 +46,33 @@ function animalCount(species) {
   return response;
 }
 
+// function entryCalculator(entrants) {
+//   let totalAdult = 0;
+//   let totalSenior = 0;
+//   let totalChild = 0;
+//   if (!entrants || Object.keys(entrants).length === 0) {
+//     return 0;
+//   }
+//   if (entrants.Adult) {
+//     totalAdult = entrants.Adult * data.prices.Adult;
+//   }
+//   if (entrants.Senior) {
+//     totalSenior = entrants.Senior * data.prices.Senior;
+//   }
+//   if (entrants.Child) {
+//     totalChild = entrants.Child * data.prices.Child;
+//   }
+//   return (totalAdult + totalSenior + totalChild);
+// }
+
 function entryCalculator(entrants) {
-  let totalAdult = 0;
-  let totalSenior = 0;
-  let totalChild = 0;
-  if (!entrants || Object.keys(entrants).length === 0) {
-    return 0;
-  }
-  if (entrants.Adult) {
-    totalAdult = entrants.Adult * data.prices.Adult;
-  }
-  if (entrants.Senior) {
-    totalSenior = entrants.Senior * data.prices.Senior;
-  }
-  if (entrants.Child) {
-    totalChild = entrants.Child * data.prices.Child;
-  }
-  return (totalAdult + totalSenior + totalChild);
+  if (!entrants || Object.keys(entrants).length === 0) return 0;
+  return Object.keys(entrants)
+    .reduce((acc, curr) => acc + (entrants[curr] * data.prices[curr]), 0);
 }
 
-function retrieveAnimalsPerLocation(locations) {
+// Início da função Animal Map
+function returnAnimalsLocation(locations) {
   const animalsPerLocation = {};
   locations.forEach((location) => {
     const animals = data.animals
@@ -87,8 +83,8 @@ function retrieveAnimalsPerLocation(locations) {
   return animalsPerLocation;
 }
 
-function retrieveAnimals(locations, sorted, sex) {
-  const animalsPerLocationWithName = {};
+function returnAnimals(locations, sorted, sex) {
+  const animalsName = {};
   locations.forEach((location) => {
     const animals = data.animals
       .filter(animal => animal.location === location)
@@ -96,24 +92,23 @@ function retrieveAnimals(locations, sorted, sex) {
         const nameKey = animal.name;
         const nameValues = animal.residents
           .filter((resident) => {
-            const isFilteringSex = sex !== undefined;
-            return isFilteringSex ? resident.sex === sex : true;
+            return sex !== undefined ? resident.sex === sex : true;
           })
           .map(resident => resident.name);
         if (sorted) nameValues.sort();
         return { [nameKey]: nameValues };
       });
-    animalsPerLocationWithName[location] = animals;
+    animalsName[location] = animals;
   });
-  return animalsPerLocationWithName;
+  return animalsName;
 }
 
 function animalMap(options) {
   const locations = ['NE', 'NW', 'SE', 'SW'];
-  if (!options) return retrieveAnimalsPerLocation(locations);
+  if (!options) return returnAnimalsLocation(locations);
   const { includeNames, sorted, sex } = options;
-  if (!includeNames) return retrieveAnimalsPerLocation(locations);
-  return retrieveAnimals(locations, sorted, sex);
+  if (!includeNames) return returnAnimalsLocation(locations);
+  return returnAnimals(locations, sorted, sex);
 }
 
 function changeAmPm(hour) {
@@ -147,11 +142,7 @@ function oldestFromFirstSpecies(id) {
   const animalDetails = data.animals
     .filter(element => element.id === animalResponsible)[0].residents
     .sort((a, b) => b.age - a.age)[0];
-  const result = [];
-  result.push(animalDetails.name);
-  result.push(animalDetails.sex);
-  result.push(animalDetails.age);
-  return result;
+  return Object.values(animalDetails);
 }
 
 function increasePrices(percentage) {
